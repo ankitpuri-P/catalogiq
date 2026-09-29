@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CatalogIQ</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#catalogue">Skip to catalogue</a>
+  <header>
+    <h1>CatalogIQ</h1>
+    <p id="health" class="muted" aria-live="polite"></p>
+  </header>
+
+  <main>
+    <section aria-labelledby="upload-h">
+      <h2 id="upload-h">Upload listings</h2>
+      <form id="upload-form">
+        <label for="csv-file">CSV file with columns <code>sku</code>, <code>raw_title</code>,
+          <code>raw_description</code></label>
+        <div class="row">
+          <input type="file" id="csv-file" accept=".csv,text/csv" required>
+          <button type="submit">Start job</button>
+        </div>
+      </form>
+      <p id="upload-msg" role="status" aria-live="polite"></p>
+
+      <div id="job" hidden>
+        <h3>Job <span id="job-id"></span> <span id="job-status" class="badge"></span></h3>
+        <progress id="job-progress" max="1" value="0" aria-labelledby="job-summary"></progress>
+        <p id="job-summary" aria-live="polite"></p>
+        <dl class="counts">
+          <div><dt>Done</dt><dd id="job-done">0</dd></div>
+          <div><dt>Failed</dt><dd id="job-failed">0</dd></div>
+          <div><dt>Cache hits</dt><dd id="job-cache">0</dd></div>
+          <div><dt>Total</dt><dd id="job-total">0</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section id="catalogue" aria-labelledby="cat-h" tabindex="-1">
+      <h2 id="cat-h">Catalogue</h2>
+      <form id="filters" class="row" role="search">
+        <label for="q" class="grow">Search
+          <input type="search" id="q" maxlength="200" placeholder="Title contains…" autocomplete="off">
+        </label>
+        <label for="category">Category
+          <select id="category"><option value="">All</option></select>
+        </label>
+      </form>
+      <p id="list-msg" role="status" aria-live="polite"></p>
+      <ul id="products" class="products"></ul>
+      <nav class="row pager" aria-label="Pagination">
+        <button type="button" id="prev">Previous</button>
+        <span id="page-info"></span>
+        <button type="button" id="next">Next</button>
+      </nav>
+    </section>
+  </main>
+
+  <dialog id="review" aria-labelledby="review-h">
+    <form id="review-form" method="dialog">
+      <h2 id="review-h">Review <span id="r-sku"></span></h2>
+      <p id="r-error" class="error" role="alert" hidden></p>
+      <div class="side-by-side">
+        <section aria-labelledby="raw-h">
+          <h3 id="raw-h">Raw</h3>
+          <dl>
+            <dt>Title</dt><dd id="r-raw-title"></dd>
+            <dt>Description</dt><dd id="r-raw-desc"></dd>
+          </dl>
+        </section>
+        <section aria-labelledby="clean-h">
+          <h3 id="clean-h">Cleaned</h3>
+          <label for="r-title">Title
+            <input id="r-title" maxlength="300" required>
+          </label>
+          <label for="r-category">Category
+            <select id="r-category" required></select>
+          </label>
+          <label for="r-tags">Tags (comma separated, up to 5)
+            <input id="r-tags" autocomplete="off">
+          </label>
+          <p class="muted">Brand: <span id="r-brand"></span> · Status: <span id="r-status"></span></p>
+        </section>
+      </div>
+      <p id="r-msg" role="status" aria-live="polite"></p>
+      <div class="row end">
+        <button type="button" id="r-cancel">Close</button>
+        <button type="submit" id="r-approve">Save &amp; approve</button>
+      </div>
+    </form>
+  </dialog>
+</body>
+</html>
